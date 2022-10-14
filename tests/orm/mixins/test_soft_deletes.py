@@ -1,0 +1,50 @@
+# -*- coding: utf-8 -*-
+
+import datetime
+import pendulum
+from flexmock import flexmock, flexmock_teardown
+from vinorm import Model, SoftDeletes
+from vinorm.orm import Builder
+from vinorm.query import QueryBuilder
+from ... import VinormTestCase
+
+
+t = pendulum.now()
+
+
+class SoftDeletesTestCase(VinormTestCase):
+    def tearDown(self):
+        flexmock_teardown()
+
+    def test_delete_sets_soft_deleted_column(self):
+        model = flexmock(SoftDeleteModelStub())
+        model.set_exists(True)
+        builder = flexmock(Builder)
+        query_builder = flexmock(QueryBuilder(None, None, None))
+        query = Builder(query_builder)
+        model.should_receive("new_query").and_return(query)
+        builder.should_receive("where").once().with_args("id", 1).and_return(query)
+        builder.should_receive("update").once().with_args({"deleted_at": t})
+        model.delete()
+
+        self.assertIsInstance(model.deleted_at, datetime.datetime)
+
+    def test_restore(self):
+        model = flexmock(SoftDeleteModelStub())
+        model.set_exists(True)
+        model.should_receive("save").once()
+
+        model.restore()
+
+        self.assertIsNone(model.deleted_at)
+
+
+class SoftDeleteModelStub(SoftDeletes, Model):
+    def get_key(self):
+        return 1
+
+    def get_key_name(self):
+        return "id"
+
+    def from_datetime(self, value):
+        return t
