@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 
-from .. import VinormTestCase
+from .. import VinorTestCase
 
-from vinorm.connections.postgres_connection import PostgresConnection
+from vinor.connections.postgres_connection import PostgresConnection
 
 
-class PostgresConnectionTestCase(VinormTestCase):
+class PostgresConnectionTestCase(VinorTestCase):
     def test_marker_is_properly_set(self):
         connection = PostgresConnection(None, "database", "", {"use_qmark": True})
 

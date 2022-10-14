@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 
-from ... import VinormTestCase
+from ... import VinorTestCase
 from . import IntegrationTestCase, User, Post
-from vinorm import Model
-from vinorm.connections import SQLiteConnection
-from vinorm.connectors.sqlite_connector import SQLiteConnector
+from vinor import Model
+from vinor.connections import SQLiteConnection
+from vinor.connectors.sqlite_connector import SQLiteConnector
 
 
-class SchemaBuilderSQLiteIntegrationTestCase(IntegrationTestCase, VinormTestCase):
+class SchemaBuilderSQLiteIntegrationTestCase(IntegrationTestCase, VinorTestCase):
     @classmethod
     def get_connection_resolver(cls):
         return DatabaseIntegrationConnectionResolver()
@@ -34,7 +34,7 @@ class SchemaBuilderSQLiteIntegrationTestCase(IntegrationTestCase, VinormTestCase
         self.assertEqual(len(old_foreign_keys), len(foreign_keys))
 
 
-class SchemaBuilderSQLiteIntegrationCascadingTestCase(VinormTestCase):
+class SchemaBuilderSQLiteIntegrationCascadingTestCase(VinorTestCase):
     @classmethod
     def setUpClass(cls):
         Model.set_connection_resolver(

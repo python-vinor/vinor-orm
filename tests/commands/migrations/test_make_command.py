@@ -2,12 +2,12 @@
 
 import os
 from flexmock import flexmock
-from vinorm.migrations import MigrationCreator
-from vinorm.commands.migrations import MigrateMakeCommand
-from .. import VinormCommandTestCase
+from vinor.migrations import MigrationCreator
+from vinor.commands.migrations import MigrateMakeCommand
+from .. import VinorCommandTestCase
 
 
-class MigrateMakeCommandTestCase(VinormCommandTestCase):
+class MigrateMakeCommandTestCase(VinorCommandTestCase):
     def test_basic_create_gives_creator_proper_arguments(self):
         creator_mock = flexmock(MigrationCreator)
         creator_mock.should_receive("create").once().with_args(

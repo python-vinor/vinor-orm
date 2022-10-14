@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 
 from flexmock import flexmock
-from vinorm.migrations import DatabaseMigrationRepository
-from vinorm.commands.migrations import InstallCommand
-from .. import VinormCommandTestCase
+from vinor.migrations import DatabaseMigrationRepository
+from vinor.commands.migrations import InstallCommand
+from .. import VinorCommandTestCase
 
 
-class MigrateInstallCommandTestCase(VinormCommandTestCase):
+class MigrateInstallCommandTestCase(VinorCommandTestCase):
     def test_execute_calls_repository_to_install(self):
         repo_mock = flexmock(DatabaseMigrationRepository)
         repo_mock.should_receive("set_source").once().with_args("foo")

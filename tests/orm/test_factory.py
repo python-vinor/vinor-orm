@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 
-from vinorm.orm import Factory, Model, belongs_to, has_many
-from vinorm.connections import SQLiteConnection
-from vinorm.connectors import SQLiteConnector
+from vinor.orm import Factory, Model, belongs_to, has_many
+from vinor.connections import SQLiteConnection
+from vinor.connectors import SQLiteConnector
 
-from .. import VinormTestCase, mock
+from .. import VinorTestCase, mock
 
 
-class FactoryTestCase(VinormTestCase):
+class FactoryTestCase(VinorTestCase):
     @classmethod
     def setUpClass(cls):
         Model.set_connection_resolver(DatabaseConnectionResolver())

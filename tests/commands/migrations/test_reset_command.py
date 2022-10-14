@@ -2,13 +2,13 @@
 
 import os
 from flexmock import flexmock
-from vinorm.migrations import Migrator
-from vinorm.commands.migrations import ResetCommand
-from vinorm import DatabaseManager
-from .. import VinormCommandTestCase
+from vinor.migrations import Migrator
+from vinor.commands.migrations import ResetCommand
+from vinor import DatabaseManager
+from .. import VinorCommandTestCase
 
 
-class ResetCommandTestCase(VinormCommandTestCase):
+class ResetCommandTestCase(VinorCommandTestCase):
     def test_basic_migrations_call_migrator_with_proper_arguments(self):
         resolver = flexmock(DatabaseManager)
         resolver.should_receive("connection").and_return(None)

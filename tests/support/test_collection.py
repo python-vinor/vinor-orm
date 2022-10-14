@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 
-from .. import VinormTestCase
-from vinorm.support.collection import Collection
+from .. import VinorTestCase
+from vinor.support.collection import Collection
 
 
-class CollectionTestCase(VinormTestCase):
+class CollectionTestCase(VinorTestCase):
     def test_first_returns_first_item_in_collection(self):
         c = Collection(["foo", "bar"])
 

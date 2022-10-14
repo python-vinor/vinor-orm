@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 
-from .. import VinormTestCase
-from vinorm.support.fluent import Fluent
+from .. import VinorTestCase
+from vinor.support.fluent import Fluent
 
 
-class FluentTestCase(VinormTestCase):
+class FluentTestCase(VinorTestCase):
     def test_get_method_return_attributes(self):
         fluent = Fluent(name="john")
 

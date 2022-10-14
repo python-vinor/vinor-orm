@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 
-from .. import VinormTestCase
+from .. import VinorTestCase
 from . import IntegrationTestCase
 
 
-class SQLiteIntegrationTestCase(IntegrationTestCase, VinormTestCase):
+class SQLiteIntegrationTestCase(IntegrationTestCase, VinorTestCase):
     @classmethod
     def get_manager_config(cls):
         return {

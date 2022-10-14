@@ -3,7 +3,7 @@
 import sys
 import os
 from unittest import TestCase
-from vinorm.database_manager import DatabaseManager
+from vinor.database_manager import DatabaseManager
 from .orm.models import Model, User
 
 PY2 = sys.version_info[0] == 2
@@ -14,13 +14,13 @@ else:
     import unittest.mock as mock
 
 
-class VinormTestCase(TestCase):
+class VinorTestCase(TestCase):
     def tearDown(self):
         if hasattr(self, "local_database"):
             os.remove(self.local_database)
 
     def init_database(self):
-        self.local_database = "/tmp/vinorm_test_database.db"
+        self.local_database = "/tmp/vinor_test_database.db"
 
         if os.path.exists(self.local_database):
             os.remove(self.local_database)
@@ -53,10 +53,10 @@ class VinormTestCase(TestCase):
         if PY2:
             return self.assertRegexpMatches(*args, **kwargs)
         else:
-            return super(VinormTestCase, self).assertRegex(*args, **kwargs)
+            return super(VinorTestCase, self).assertRegex(*args, **kwargs)
 
     def assertNotRegex(self, *args, **kwargs):
         if PY2:
             return self.assertNotRegexpMatches(*args, **kwargs)
         else:
-            return super(VinormTestCase, self).assertNotRegex(*args, **kwargs)
+            return super(VinorTestCase, self).assertNotRegex(*args, **kwargs)

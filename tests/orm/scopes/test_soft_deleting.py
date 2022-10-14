@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 
 from flexmock import flexmock, flexmock_teardown
-from vinorm.orm.scopes import SoftDeletingScope
-from vinorm.orm import Builder, Model
-from vinorm.query import QueryBuilder
-from ... import VinormTestCase, mock
+from vinor.orm.scopes import SoftDeletingScope
+from vinor.orm import Builder, Model
+from vinor.query import QueryBuilder
+from ... import VinorTestCase, mock
 
 
-class SoftDeletingScopeTestCase(VinormTestCase):
+class SoftDeletingScopeTestCase(VinorTestCase):
     def tearDown(self):
         flexmock_teardown()
 

@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 
 from flexmock import flexmock, flexmock_teardown
-from vinorm.schema import Blueprint
-from vinorm.schema.grammars import SchemaGrammar
-from vinorm.connections import Connection
-from .. import VinormTestCase
+from vinor.schema import Blueprint
+from vinor.schema.grammars import SchemaGrammar
+from vinor.connections import Connection
+from .. import VinorTestCase
 
 
-class SchemaBuilderTestCase(VinormTestCase):
+class SchemaBuilderTestCase(VinorTestCase):
     def tearDown(self):
         flexmock_teardown()
 

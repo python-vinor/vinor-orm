@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 
 import os
-from ... import VinormTestCase
-from vinorm.connections import PostgresConnection
-from vinorm.connectors.postgres_connector import PostgresConnector
+from ... import VinorTestCase
+from vinor.connections import PostgresConnection
+from vinor.connectors.postgres_connector import PostgresConnector
 from . import IntegrationTestCase
 
 
-class SchemaBuilderPostgresIntegrationTestCase(IntegrationTestCase, VinormTestCase):
+class SchemaBuilderPostgresIntegrationTestCase(IntegrationTestCase, VinorTestCase):
     @classmethod
     def get_connection_resolver(cls):
         return DatabaseIntegrationConnectionResolver()
@@ -23,13 +23,13 @@ class DatabaseIntegrationConnectionResolver(object):
 
         ci = os.environ.get("CI", False)
         if ci:
-            database = "vinorm_test"
+            database = "vinor_test"
             user = "postgres"
             password = None
         else:
-            database = "vinorm_test"
-            user = "vinorm"
-            password = "vinorm"
+            database = "vinor_test"
+            user = "vinor"
+            password = "vinor"
 
         self._connection = PostgresConnection(
             PostgresConnector().connect(

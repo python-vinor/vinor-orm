@@ -1,15 +1,15 @@
 # -*- coding: utf-8 -*-
 
 from flexmock import flexmock, flexmock_teardown
-from vinorm import DatabaseManager
-from vinorm.connections import Connection
-from vinorm.seeds import Seeder
+from vinor import DatabaseManager
+from vinor.connections import Connection
+from vinor.seeds import Seeder
 from cleo import Output, Command as BaseCommand
 
-from .. import VinormTestCase
+from .. import VinorTestCase
 
 
-class SeederTestCase(VinormTestCase):
+class SeederTestCase(VinorTestCase):
     def tearDown(self):
         super(SeederTestCase, self).tearDown()
         flexmock_teardown()

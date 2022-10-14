@@ -2,10 +2,10 @@
 
 from flexmock import flexmock_teardown
 from cleo import Application, CommandTester
-from .. import VinormTestCase
+from .. import VinorTestCase
 
 
-class VinormCommandTestCase(VinormTestCase):
+class VinorCommandTestCase(VinorTestCase):
     def tearDown(self):
         flexmock_teardown()
 

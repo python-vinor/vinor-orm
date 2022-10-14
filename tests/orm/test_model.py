@@ -6,24 +6,24 @@ import time
 import datetime
 from pendulum import Pendulum
 from flexmock import flexmock, flexmock_teardown
-from .. import VinormTestCase, mock
+from .. import VinorTestCase, mock
 from ..utils import MockModel, MockQueryBuilder, MockConnection, MockProcessor
 
-from vinorm.query.builder import QueryBuilder
-from vinorm.query.grammars import QueryGrammar
-from vinorm.query.processors import QueryProcessor
-from vinorm.orm.builder import Builder
-from vinorm.orm.model import Model
-from vinorm.orm.utils import mutator, accessor
-from vinorm.exceptions.orm import ModelNotFound, MassAssignmentError
-from vinorm.orm.collection import Collection
-from vinorm.connections import Connection
-from vinorm import DatabaseManager
-from vinorm.utils import basestring
-from vinorm.events import Event
+from vinor.query.builder import QueryBuilder
+from vinor.query.grammars import QueryGrammar
+from vinor.query.processors import QueryProcessor
+from vinor.orm.builder import Builder
+from vinor.orm.model import Model
+from vinor.orm.utils import mutator, accessor
+from vinor.exceptions.orm import ModelNotFound, MassAssignmentError
+from vinor.orm.collection import Collection
+from vinor.connections import Connection
+from vinor import DatabaseManager
+from vinor.utils import basestring
+from vinor.events import Event
 
 
-class OrmModelTestCase(VinormTestCase):
+class OrmModelTestCase(VinorTestCase):
     def tearDown(self):
         flexmock_teardown()
 
@@ -658,7 +658,7 @@ class OrmModelTestCase(VinormTestCase):
         self.assertEqual(2, len(model.relation_many))
         self.assertEqual([2, 3], model.relation_many.lists("id"))
 
-    def test_new_query_returns_vinorm_query_builder(self):
+    def test_new_query_returns_vinor_query_builder(self):
         conn = flexmock(Connection)
         grammar = flexmock(QueryGrammar)
         processor = flexmock(QueryProcessor)

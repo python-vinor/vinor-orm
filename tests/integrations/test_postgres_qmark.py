@@ -2,23 +2,23 @@
 
 import os
 
-from .. import VinormTestCase
+from .. import VinorTestCase
 from . import IntegrationTestCase
 
 
-class PostgresQmarkIntegrationTestCase(IntegrationTestCase, VinormTestCase):
+class PostgresQmarkIntegrationTestCase(IntegrationTestCase, VinorTestCase):
     @classmethod
     def get_manager_config(cls):
         ci = os.environ.get("CI", False)
 
         if ci:
-            database = "vinorm_test"
+            database = "vinor_test"
             user = "postgres"
             password = None
         else:
-            database = "vinorm_test"
-            user = "vinorm"
-            password = "vinorm"
+            database = "vinor_test"
+            user = "vinor"
+            password = "vinor"
 
         return {
             "default": "postgres",

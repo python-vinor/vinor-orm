@@ -1,18 +1,16 @@
 [tool.poetry]
-name = "vinorm"
-version = "0.9.9"
+name = "vinor"
+version = "0.9.10"
 description = "The Orator ORM provides a simple yet beautiful ActiveRecord implementation."
 
 license = "MIT"
 
-authors = [
-    "Sébastien Eustace <sebastien@eustace.io>"
-]
+authors = ["Ethan Vu <ethanvu.dev@gmail.com>"]
 
 readme = 'README.rst'
 
-repository = "https://github.com/sdispater/vinorm"
-homepage = "https://vinorm-orm.com/"
+repository = "https://github.com/vinsast/vinor"
+homepage = "https://vinor-orm.com/"
 
 keywords = ['database', 'orm']
 
@@ -54,7 +52,7 @@ pgsql = ["psycopg2"]
 
 
 [tool.poetry.scripts]
-vinorm = 'vinorm.commands.application:application.run'
+vinor = 'vinor.commands.application:application.run'
 
 
 [build-system]

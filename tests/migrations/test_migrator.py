@@ -4,14 +4,14 @@ import os
 import glob
 import inspect
 from flexmock import flexmock, flexmock_teardown
-from .. import VinormTestCase
-from vinorm.migrations import Migrator, DatabaseMigrationRepository, Migration
-from vinorm import DatabaseManager
-from vinorm.connections import Connection
-from vinorm.utils import PY3K
+from .. import VinorTestCase
+from vinor.migrations import Migrator, DatabaseMigrationRepository, Migration
+from vinor import DatabaseManager
+from vinor.connections import Connection
+from vinor.utils import PY3K
 
 
-class MigratorTestCase(VinormTestCase):
+class MigratorTestCase(VinorTestCase):
     def setUp(self):
         if PY3K:
             self.orig = inspect.getargspec

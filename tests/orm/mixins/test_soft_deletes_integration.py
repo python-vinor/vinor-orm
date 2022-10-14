@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 
-from ... import VinormTestCase
-from vinorm import DatabaseManager, SoftDeletes, Model
-from vinorm.orm import has_many
-from vinorm.query import QueryBuilder
-from vinorm.pagination import Paginator
+from ... import VinorTestCase
+from vinor import DatabaseManager, SoftDeletes, Model
+from vinor.orm import has_many
+from vinor.query import QueryBuilder
+from vinor.pagination import Paginator
 
 
-class SoftDeletesIntegrationTestCase(VinormTestCase):
+class SoftDeletesIntegrationTestCase(VinorTestCase):
 
     databases = {"test": {"driver": "sqlite", "database": ":memory:"}}
 

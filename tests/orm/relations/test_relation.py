@@ -3,15 +3,15 @@
 
 import pendulum
 from flexmock import flexmock, flexmock_teardown
-from ... import VinormTestCase
+from ... import VinorTestCase
 
-from vinorm.query.builder import QueryBuilder
-from vinorm.orm.builder import Builder
-from vinorm.orm.model import Model
-from vinorm.orm.relations import HasOne
+from vinor.query.builder import QueryBuilder
+from vinor.orm.builder import Builder
+from vinor.orm.model import Model
+from vinor.orm.relations import HasOne
 
 
-class OrmRelationTestCase(VinormTestCase):
+class OrmRelationTestCase(VinorTestCase):
     def tearDown(self):
         flexmock_teardown()
 

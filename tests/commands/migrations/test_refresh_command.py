@@ -2,13 +2,13 @@
 
 import os
 from flexmock import flexmock
-from vinorm.migrations import Migrator
-from vinorm.commands.migrations import RefreshCommand
-from vinorm import DatabaseManager
-from .. import VinormCommandTestCase
+from vinor.migrations import Migrator
+from vinor.commands.migrations import RefreshCommand
+from vinor import DatabaseManager
+from .. import VinorCommandTestCase
 
 
-class RefreshCommandTestCase(VinormCommandTestCase):
+class RefreshCommandTestCase(VinorCommandTestCase):
     def test_refresh_runs_the_seeder_when_seed_option_set(self):
         resolver = flexmock(DatabaseManager)
         resolver.should_receive("connection").and_return(None)

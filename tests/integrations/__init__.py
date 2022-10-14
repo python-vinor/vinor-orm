@@ -8,8 +8,8 @@ import simplejson as json
 
 from datetime import datetime, timedelta, date
 from backpack import collect
-from vinorm import Model, Collection, DatabaseManager
-from vinorm.orm import (
+from vinor import Model, Collection, DatabaseManager
+from vinor.orm import (
     morph_to,
     has_one,
     has_many,
@@ -19,11 +19,11 @@ from vinorm.orm import (
     scope,
     accessor,
 )
-from vinorm.orm.relations import BelongsToMany
-from vinorm.exceptions.orm import ModelNotFound
+from vinor.orm.relations import BelongsToMany
+from vinor.exceptions.orm import ModelNotFound
 
 
-logger = logging.getLogger("vinorm.connection.queries")
+logger = logging.getLogger("vinor.connection.queries")
 logger.setLevel(logging.DEBUG)
 
 
@@ -89,54 +89,54 @@ class IntegrationTestCase(object):
         self.revert("test")
 
     def test_basic_model_retrieval(self):
-        VinormTestUser.create(email="john@doe.com")
-        model = VinormTestUser.where("email", "john@doe.com").first()
+        VinorTestUser.create(email="john@doe.com")
+        model = VinorTestUser.where("email", "john@doe.com").first()
         self.assertEqual("john@doe.com", model.email)
 
     def test_basic_model_collection_retrieval(self):
-        VinormTestUser.create(id=1, email="john@doe.com")
-        VinormTestUser.create(id=2, email="jane@doe.com")
+        VinorTestUser.create(id=1, email="john@doe.com")
+        VinorTestUser.create(id=2, email="jane@doe.com")
 
-        models = VinormTestUser.oldest("id").get()
+        models = VinorTestUser.oldest("id").get()
 
         self.assertEqual(2, len(models))
         self.assertIsInstance(models, Collection)
-        self.assertIsInstance(models[0], VinormTestUser)
-        self.assertIsInstance(models[1], VinormTestUser)
+        self.assertIsInstance(models[0], VinorTestUser)
+        self.assertIsInstance(models[1], VinorTestUser)
         self.assertEqual("john@doe.com", models[0].email)
         self.assertEqual("jane@doe.com", models[1].email)
 
     def test_lists_retrieval(self):
-        VinormTestUser.create(id=1, email="john@doe.com")
-        VinormTestUser.create(id=2, email="jane@doe.com")
+        VinorTestUser.create(id=1, email="john@doe.com")
+        VinorTestUser.create(id=2, email="jane@doe.com")
 
-        simple = VinormTestUser.oldest("id").lists("email")
-        keyed = VinormTestUser.oldest("id").lists("email", "id")
+        simple = VinorTestUser.oldest("id").lists("email")
+        keyed = VinorTestUser.oldest("id").lists("email", "id")
 
         self.assertEqual(["john@doe.com", "jane@doe.com"], simple)
         self.assertEqual({1: "john@doe.com", 2: "jane@doe.com"}, keyed)
 
     def test_find_or_fail(self):
-        VinormTestUser.create(id=1, email="john@doe.com")
-        VinormTestUser.create(id=2, email="jane@doe.com")
+        VinorTestUser.create(id=1, email="john@doe.com")
+        VinorTestUser.create(id=2, email="jane@doe.com")
 
-        single = VinormTestUser.find_or_fail(1)
-        multiple = VinormTestUser.find_or_fail([1, 2])
+        single = VinorTestUser.find_or_fail(1)
+        multiple = VinorTestUser.find_or_fail([1, 2])
 
-        self.assertIsInstance(single, VinormTestUser)
+        self.assertIsInstance(single, VinorTestUser)
         self.assertEqual("john@doe.com", single.email)
         self.assertIsInstance(multiple, Collection)
-        self.assertIsInstance(multiple[0], VinormTestUser)
-        self.assertIsInstance(multiple[1], VinormTestUser)
+        self.assertIsInstance(multiple[0], VinorTestUser)
+        self.assertIsInstance(multiple[1], VinorTestUser)
 
     def test_find_or_fail_with_single_id_raises_model_not_found_exception(self):
-        self.assertRaises(ModelNotFound, VinormTestUser.find_or_fail, 1)
+        self.assertRaises(ModelNotFound, VinorTestUser.find_or_fail, 1)
 
     def test_find_or_fail_with_multiple_ids_raises_model_not_found_exception(self):
-        self.assertRaises(ModelNotFound, VinormTestUser.find_or_fail, [1, 2])
+        self.assertRaises(ModelNotFound, VinorTestUser.find_or_fail, [1, 2])
 
     def test_one_to_one_relationship(self):
-        user = VinormTestUser.create(email="john@doe.com")
+        user = VinorTestUser.create(email="john@doe.com")
         user.post().create(name="First Post")
 
         post = user.post
@@ -146,7 +146,7 @@ class IntegrationTestCase(object):
         self.assertEqual("First Post", post.name)
 
     def test_one_to_many_relationship(self):
-        user = VinormTestUser.create(email="john@doe.com")
+        user = VinorTestUser.create(email="john@doe.com")
         user.posts().create(name="First Post")
         user.posts().create(name="Second Post")
 
@@ -154,45 +154,45 @@ class IntegrationTestCase(object):
         post2 = user.posts().where("name", "Second Post").first()
 
         self.assertEqual(2, len(posts))
-        self.assertIsInstance(posts[0], VinormTestPost)
-        self.assertIsInstance(posts[1], VinormTestPost)
-        self.assertIsInstance(post2, VinormTestPost)
+        self.assertIsInstance(posts[0], VinorTestPost)
+        self.assertIsInstance(posts[1], VinorTestPost)
+        self.assertIsInstance(post2, VinorTestPost)
         self.assertEqual("Second Post", post2.name)
-        self.assertIsInstance(post2.user, VinormTestUser)
+        self.assertIsInstance(post2.user, VinorTestUser)
         self.assertEqual("john@doe.com", post2.user.email)
 
     def test_basic_model_hydrate(self):
-        VinormTestUser.create(id=1, email="john@doe.com")
-        VinormTestUser.create(id=2, email="jane@doe.com")
+        VinorTestUser.create(id=1, email="john@doe.com")
+        VinorTestUser.create(id=2, email="jane@doe.com")
 
-        models = VinormTestUser.hydrate_raw(
+        models = VinorTestUser.hydrate_raw(
             "SELECT * FROM test_users WHERE email = %s" % self.marker,
             ["jane@doe.com"],
             self.connection().get_name(),
         )
         self.assertIsInstance(models, Collection)
-        self.assertIsInstance(models[0], VinormTestUser)
+        self.assertIsInstance(models[0], VinorTestUser)
         self.assertEqual("jane@doe.com", models[0].email)
         self.assertEqual(self.connection().get_name(), models[0].get_connection_name())
         self.assertEqual(1, len(models))
 
     def test_has_on_self_referencing_belongs_to_many_relationship(self):
-        user = VinormTestUser.create(email="john@doe.com")
+        user = VinorTestUser.create(email="john@doe.com")
         friend = user.friends().create(email="jane@doe.com")
 
-        results = VinormTestUser.has("friends").get()
+        results = VinorTestUser.has("friends").get()
 
         self.assertEqual(1, len(results))
         self.assertEqual("john@doe.com", results.first().email)
 
     def test_basic_has_many_eager_loading(self):
-        user = VinormTestUser.create(id=1, email="john@doe.com")
+        user = VinorTestUser.create(id=1, email="john@doe.com")
         post = user.posts().create(name="First Post")
         comment = post.comments().create(body="Text")
         comment2 = post.comments().create(body="Text 2")
         comment.children().save(comment2)
         user = (
-            VinormTestUser.with_("posts.comments.children.parent")
+            VinorTestUser.with_("posts.comments.children.parent")
             .where("email", "john@doe.com")
             .first()
         )
@@ -211,11 +211,11 @@ class IntegrationTestCase(object):
 
         formatter.reset()
 
-        post = VinormTestPost.with_("user").where("name", "First Post").get()
+        post = VinorTestPost.with_("user").where("name", "First Post").get()
         self.assertEqual("john@doe.com", post.first().user.email)
 
         comment = (
-            VinormTestComment.with_("parent.post.user").where("body", "Text 2").first()
+            VinorTestComment.with_("parent.post.user").where("body", "Text 2").first()
         )
         self.assertEqual("Text", comment.parent.body)
         self.assertEqual("First Post", comment.parent.post.name)
@@ -225,13 +225,13 @@ class IntegrationTestCase(object):
         self.assertEqual(6, len(queries))
 
     def test_all_eager_loaded_transitive_relations_must_be_present(self):
-        user = VinormTestUser.create(id=1, email="john@doe.com")
+        user = VinorTestUser.create(id=1, email="john@doe.com")
         post = user.posts().create(name="First Post")
         comment = post.comments().create(body="Text")
         comment2 = post.comments().create(body="Text 2")
         comment.children().save(comment2)
         post = (
-            VinormTestPost.with_("user", "user.posts", "user.post")
+            VinorTestPost.with_("user", "user.posts", "user.post")
             .where("id", post.id)
             .first()
         )
@@ -242,7 +242,7 @@ class IntegrationTestCase(object):
         assert "post" in data["user"]
 
     def test_basic_morph_many_relationship(self):
-        user = VinormTestUser.create(email="john@doe.com")
+        user = VinorTestUser.create(email="john@doe.com")
         user.photos().create(name="Avatar 1")
         user.photos().create(name="Avatar 2")
         post = user.posts().create(name="First Post")
@@ -250,10 +250,10 @@ class IntegrationTestCase(object):
         post.photos().create(name="Hero 2")
 
         self.assertIsInstance(user.photos, Collection)
-        self.assertIsInstance(user.photos[0], VinormTestPhoto)
+        self.assertIsInstance(user.photos[0], VinorTestPhoto)
 
         self.assertIsInstance(post.photos, Collection)
-        self.assertIsInstance(post.photos[0], VinormTestPhoto)
+        self.assertIsInstance(post.photos[0], VinorTestPhoto)
         self.assertEqual(2, len(user.photos))
         self.assertEqual(2, len(post.photos))
         self.assertEqual("Avatar 1", user.photos[0].name)
@@ -261,20 +261,20 @@ class IntegrationTestCase(object):
         self.assertEqual("Hero 1", post.photos[0].name)
         self.assertEqual("Hero 2", post.photos[1].name)
 
-        photos = VinormTestPhoto.order_by("name").get()
+        photos = VinorTestPhoto.order_by("name").get()
 
         self.assertIsInstance(photos, Collection)
         self.assertEqual(4, len(photos))
-        self.assertIsInstance(photos[0].imageable, VinormTestUser)
-        self.assertIsInstance(photos[2].imageable, VinormTestPost)
+        self.assertIsInstance(photos[0].imageable, VinorTestUser)
+        self.assertIsInstance(photos[2].imageable, VinorTestPost)
         self.assertEqual("john@doe.com", photos[1].imageable.email)
         self.assertEqual("First Post", photos[3].imageable.name)
 
     def test_multi_insert_with_different_values(self):
         date = pendulum.utcnow()._datetime
-        user1 = VinormTestUser.create(email="john@doe.com")
-        user2 = VinormTestUser.create(email="jane@doe.com")
-        result = VinormTestPost.insert(
+        user1 = VinorTestUser.create(email="john@doe.com")
+        user2 = VinorTestUser.create(email="jane@doe.com")
+        result = VinorTestPost.insert(
             [
                 {
                     "user_id": user1.id,
@@ -292,12 +292,12 @@ class IntegrationTestCase(object):
         )
 
         self.assertTrue(result)
-        self.assertEqual(2, VinormTestPost.count())
+        self.assertEqual(2, VinorTestPost.count())
 
     def test_multi_insert_with_same_values(self):
         date = pendulum.utcnow()._datetime
-        user1 = VinormTestUser.create(email="john@doe.com")
-        result = VinormTestPost.insert(
+        user1 = VinorTestUser.create(email="john@doe.com")
+        result = VinorTestPost.insert(
             [
                 {
                     "user_id": user1.id,
@@ -315,16 +315,16 @@ class IntegrationTestCase(object):
         )
 
         self.assertTrue(result)
-        self.assertEqual(2, VinormTestPost.count())
+        self.assertEqual(2, VinorTestPost.count())
 
     def test_belongs_to_many_further_query(self):
-        user = VinormTestUser.create(id=1, email="john@doe.com")
-        friend = VinormTestUser.create(id=2, email="jane@doe.com")
-        another_friend = VinormTestUser.create(id=3, email="another@doe.com")
+        user = VinorTestUser.create(id=1, email="john@doe.com")
+        friend = VinorTestUser.create(id=2, email="jane@doe.com")
+        another_friend = VinorTestUser.create(id=3, email="another@doe.com")
         user.friends().attach(friend)
         user.friends().attach(another_friend)
         related_friend = (
-            VinormTestUser.with_("friends")
+            VinorTestUser.with_("friends")
             .find(1)
             .friends()
             .where("test_users.id", 3)
@@ -345,15 +345,15 @@ class IntegrationTestCase(object):
         self.assertEqual(1, user.friends().get().count())
 
     def test_belongs_to_morph_many_eagerload(self):
-        user = VinormTestUser.create(id=1, email="john@doe.com")
+        user = VinorTestUser.create(id=1, email="john@doe.com")
         user.photos().create(name="Avatar 1")
         user.photos().create(name="Avatar 2")
         post = user.posts().create(name="First Post")
         post.photos().create(name="Hero 1")
         post.photos().create(name="Hero 2")
 
-        posts = VinormTestPost.with_("user", "photos").get()
-        self.assertIsInstance(posts[0].user, VinormTestUser)
+        posts = VinorTestPost.with_("user", "photos").get()
+        self.assertIsInstance(posts[0].user, VinorTestUser)
         self.assertEqual(user.id, posts[0].user().first().id)
         self.assertIsInstance(posts[0].photos, Collection)
         self.assertEqual(
@@ -361,8 +361,8 @@ class IntegrationTestCase(object):
         )
 
     def test_belongs_to_associate(self):
-        user = VinormTestUser.create(id=1, email="john@doe.com")
-        post = VinormTestPost(name="Test Post")
+        user = VinorTestUser.create(id=1, email="john@doe.com")
+        post = VinorTestPost(name="Test Post")
 
         post.user().associate(user)
         post.save()
@@ -370,32 +370,32 @@ class IntegrationTestCase(object):
         self.assertEqual(1, post.user.id)
 
     def test_belongs_to_associate_new_instances(self):
-        user = VinormTestUser.create(email="john@doe.com")
+        user = VinorTestUser.create(email="john@doe.com")
         post = user.posts().create(name="First Post")
-        comment1 = VinormTestComment.create(body="test1", post_id=post.id)
+        comment1 = VinorTestComment.create(body="test1", post_id=post.id)
 
         self.assertEqual(comment1.parent, None)
 
-        comment2 = VinormTestComment.create(body="test2", post_id=post.id)
+        comment2 = VinorTestComment.create(body="test2", post_id=post.id)
         comment2.parent().associate(comment1)
 
         self.assertEqual(comment2.parent.id, comment1.id)
 
     def test_has_many_eagerload(self):
-        user = VinormTestUser.create(id=1, email="john@doe.com")
+        user = VinorTestUser.create(id=1, email="john@doe.com")
         post1 = user.posts().create(name="First Post")
         post2 = user.posts().create(name="Second Post")
 
-        user = VinormTestUser.with_("posts").first()
+        user = VinorTestUser.with_("posts").first()
         self.assertIsInstance(user.posts, Collection)
         self.assertEqual(user.posts().where("name", "Second Post").first().id, post2.id)
 
     def test_relationships_properties_accept_builder(self):
-        user = VinormTestUser.create(id=1, email="john@doe.com")
+        user = VinorTestUser.create(id=1, email="john@doe.com")
         post1 = user.posts().create(name="First Post")
         post2 = user.posts().create(name="Second Post")
 
-        user = VinormTestUser.with_("posts").first()
+        user = VinorTestUser.with_("posts").first()
         columns = ", ".join(
             self.connection().get_query_grammar().wrap_list(["id", "name", "user_id"])
         )
@@ -411,7 +411,7 @@ class IntegrationTestCase(object):
             user.post().to_sql(),
         )
 
-        user = VinormTestUser.first()
+        user = VinorTestUser.first()
         self.assertEqual(
             "SELECT %(columns)s FROM %(table)s WHERE %(table)s.%(user_id)s = %(marker)s ORDER BY %(name)s DESC"
             % {
@@ -425,48 +425,48 @@ class IntegrationTestCase(object):
         )
 
     def test_morph_to_eagerload(self):
-        user = VinormTestUser.create(id=1, email="john@doe.com")
+        user = VinorTestUser.create(id=1, email="john@doe.com")
         user.photos().create(name="Avatar 1")
         user.photos().create(name="Avatar 2")
         post = user.posts().create(name="First Post")
         post.photos().create(name="Hero 1")
         post.photos().create(name="Hero 2")
 
-        photo = VinormTestPhoto.with_("imageable").where("name", "Hero 2").first()
-        self.assertIsInstance(photo.imageable, VinormTestPost)
+        photo = VinorTestPhoto.with_("imageable").where("name", "Hero 2").first()
+        self.assertIsInstance(photo.imageable, VinorTestPost)
         self.assertEqual(post.id, photo.imageable.id)
         self.assertEqual(
             post.id, photo.imageable().where("name", "First Post").first().id
         )
 
     def test_json_type(self):
-        user = VinormTestUser.create(id=1, email="john@doe.com")
+        user = VinorTestUser.create(id=1, email="john@doe.com")
         photo = user.photos().create(name="Avatar 1", metadata={"foo": "bar"})
 
-        photo = VinormTestPhoto.find(photo.id)
+        photo = VinorTestPhoto.find(photo.id)
         self.assertEqual("bar", photo.metadata["foo"])
 
     def test_local_scopes(self):
         yesterday = datetime.utcnow() - timedelta(days=1)
-        john = VinormTestUser.create(
+        john = VinorTestUser.create(
             id=1, email="john@doe.com", created_at=yesterday, updated_at=yesterday
         )
-        jane = VinormTestUser.create(id=2, email="jane@doe.com")
+        jane = VinorTestUser.create(id=2, email="jane@doe.com")
 
-        result = VinormTestUser.older_than(minutes=30).get()
+        result = VinorTestUser.older_than(minutes=30).get()
         self.assertEqual(1, len(result))
         self.assertEqual("john@doe.com", result.first().email)
 
-        result = VinormTestUser.where_not_null("id").older_than(minutes=30).get()
+        result = VinorTestUser.where_not_null("id").older_than(minutes=30).get()
         self.assertEqual(1, len(result))
         self.assertEqual("john@doe.com", result.first().email)
 
     def test_repr_relations(self):
-        user = VinormTestUser.create(id=1, email="john@doe.com")
+        user = VinorTestUser.create(id=1, email="john@doe.com")
         photo = user.photos().create(name="Avatar 1", metadata={"foo": "bar"})
 
-        repr(VinormTestUser.first().photos)
-        repr(VinormTestUser.with_("photos").first().photos)
+        repr(VinorTestUser.first().photos)
+        repr(VinorTestUser.with_("photos").first().photos)
 
     def test_reconnection(self):
         db = Model.get_connection_resolver()
@@ -477,7 +477,7 @@ class IntegrationTestCase(object):
         db.disconnect()
 
     def test_raw_query(self):
-        user = VinormTestUser.create(id=1, email="john@doe.com")
+        user = VinorTestUser.create(id=1, email="john@doe.com")
         photo = user.photos().create(name="Avatar 1", metadata={"foo": "bar"})
 
         user = (
@@ -498,9 +498,9 @@ class IntegrationTestCase(object):
         self.assertEqual("Avatar 1", photos[0]["name"])
 
     def test_pivot(self):
-        user = VinormTestUser.create(id=1, email="john@doe.com")
-        friend = VinormTestUser.create(id=2, email="jane@doe.com")
-        another_friend = VinormTestUser.create(id=3, email="another@doe.com")
+        user = VinorTestUser.create(id=1, email="john@doe.com")
+        friend = VinorTestUser.create(id=2, email="jane@doe.com")
+        another_friend = VinorTestUser.create(id=3, email="another@doe.com")
         user.friends().attach(friend)
         user.friends().attach(another_friend)
 
@@ -513,22 +513,22 @@ class IntegrationTestCase(object):
         )
 
     def test_serialization(self):
-        user = VinormTestUser.create(id=1, email="john@doe.com")
+        user = VinorTestUser.create(id=1, email="john@doe.com")
         photo = user.photos().create(name="Avatar 1", metadata={"foo": "bar"})
 
-        serialized_user = VinormTestUser.first().serialize()
-        serialized_photo = VinormTestPhoto.first().serialize()
+        serialized_user = VinorTestUser.first().serialize()
+        serialized_photo = VinorTestPhoto.first().serialize()
 
         self.assertEqual(1, serialized_user["id"])
         self.assertEqual("john@doe.com", serialized_user["email"])
         self.assertEqual("Avatar 1", serialized_photo["name"])
         self.assertEqual("bar", serialized_photo["metadata"]["foo"])
         self.assertEqual(
-            "Avatar 1", json.loads(VinormTestPhoto.first().to_json())["name"]
+            "Avatar 1", json.loads(VinorTestPhoto.first().to_json())["name"]
         )
 
     def test_query_builder_results_attribute_retrieval(self):
-        user = VinormTestUser.create(id=1, email="john@doe.com")
+        user = VinorTestUser.create(id=1, email="john@doe.com")
         users = self.connection().table("test_users").get()
 
         self.assertEqual("john@doe.com", users[0].email)
@@ -537,7 +537,7 @@ class IntegrationTestCase(object):
         self.assertEqual(1, users[0]["id"])
 
     def test_query_builder_results_serialization(self):
-        VinormTestUser.create(id=1, email="john@doe.com")
+        VinorTestUser.create(id=1, email="john@doe.com")
         users = self.connection().table("test_users").get()
 
         serialized = json.loads(users.to_json())[0]
@@ -545,20 +545,20 @@ class IntegrationTestCase(object):
         self.assertEqual("john@doe.com", serialized["email"])
 
     def test_connection_switching(self):
-        VinormTestUser.create(id=1, email="john@doe.com")
+        VinorTestUser.create(id=1, email="john@doe.com")
 
-        self.assertIsNone(VinormTestUser.on("test").first())
-        self.assertIsNotNone(VinormTestUser.first())
+        self.assertIsNone(VinorTestUser.on("test").first())
+        self.assertIsNotNone(VinorTestUser.first())
 
-        VinormTestUser.on("test").insert(id=1, email="jane@doe.com")
-        user = VinormTestUser.on("test").first()
+        VinorTestUser.on("test").insert(id=1, email="jane@doe.com")
+        user = VinorTestUser.on("test").first()
         connection = user.get_connection()
         post = user.posts().create(name="Test")
         self.assertEqual(connection, post.get_connection())
 
     def test_columns_listing(self):
         column_names = (
-            collect(self.schema().get_column_listing(VinormTestUser().get_table()))
+            collect(self.schema().get_column_listing(VinorTestUser().get_table()))
             .sort()
             .all()
         )
@@ -566,27 +566,27 @@ class IntegrationTestCase(object):
         self.assertEqual(["created_at", "email", "id", "updated_at"], column_names)
 
     def test_has_column(self):
-        self.assertTrue(self.schema().has_column(VinormTestUser().get_table(), "email"))
+        self.assertTrue(self.schema().has_column(VinorTestUser().get_table(), "email"))
 
     def test_table_exists(self):
-        self.assertTrue(self.schema().has_table(VinormTestUser().get_table()))
+        self.assertTrue(self.schema().has_table(VinorTestUser().get_table()))
 
     def test_transaction(self):
         count = self.connection().table("test_users").count()
 
         with self.connection().transaction():
-            VinormTestUser.create(id=1, email="jane@doe.com")
+            VinorTestUser.create(id=1, email="jane@doe.com")
             self.connection().rollback()
 
         self.assertEqual(count, self.connection().table("test_users").count())
 
     def test_date(self):
-        user = VinormTestUser.create(id=1, email="john@doe.com")
+        user = VinorTestUser.create(id=1, email="john@doe.com")
         photo1 = user.photos().create(name="Photo 1", taken_on=pendulum.date.today())
         photo2 = user.photos().create(name="Photo 2")
 
-        self.assertIsInstance(VinormTestPhoto.find(photo1.id).taken_on, date)
-        self.assertIsNone(VinormTestPhoto.find(photo2.id).taken_on)
+        self.assertIsInstance(VinorTestPhoto.find(photo1.id).taken_on, date)
+        self.assertIsNone(VinorTestPhoto.find(photo2.id).taken_on)
 
     def test_chunk_update_builder(self):
         for i in range(20):
@@ -610,28 +610,28 @@ class IntegrationTestCase(object):
 
     def test_chunk_update_model(self):
         for i in range(20):
-            VinormTestUser.create(id=i + 1, email="john{}@doe.com".format(i))
+            VinorTestUser.create(id=i + 1, email="john{}@doe.com".format(i))
 
         count = 0
-        for users in VinormTestUser.where("id", "<", 50).chunk(10):
+        for users in VinorTestUser.where("id", "<", 50).chunk(10):
             for user in users:
                 count += 1
 
                 if count == 10:
-                    VinormTestUser.where("id", user.id).update(id=60)
+                    VinorTestUser.where("id", user.id).update(id=60)
 
         self.assertEqual(count, 20)
 
     def test_timestamp_with_timezone(self):
         now = pendulum.utcnow()
-        user = VinormTestUser.create(email="john@doe.com", created_at=now)
-        fresh_user = VinormTestUser.find(user.id)
+        user = VinorTestUser.create(email="john@doe.com", created_at=now)
+        fresh_user = VinorTestUser.find(user.id)
 
         self.assertEqual(user.created_at, fresh_user.created_at)
         self.assertEqual(now, fresh_user.created_at)
 
     def test_touches(self):
-        user = VinormTestUser.create(email="john@doe.com")
+        user = VinorTestUser.create(email="john@doe.com")
         post = user.posts().create(name="Post")
         comment1 = post.comments().create(body="Comment 1")
         comment2 = post.comments().create(body="Comment 2")
@@ -648,16 +648,16 @@ class IntegrationTestCase(object):
 
         self.assertTrue(comment4.updated_at > comment4_updated_at)
         self.assertEqual(
-            comment4.updated_at, VinormTestComment.find(comment4.id).updated_at
+            comment4.updated_at, VinorTestComment.find(comment4.id).updated_at
         )
         self.assertTrue(
-            comment3_updated_at < VinormTestComment.find(comment3.id).updated_at
+            comment3_updated_at < VinorTestComment.find(comment3.id).updated_at
         )
         self.assertEqual(
-            comment1_updated_at, VinormTestComment.find(comment1.id).updated_at
+            comment1_updated_at, VinorTestComment.find(comment1.id).updated_at
         )
         self.assertEqual(
-            comment2_updated_at, VinormTestComment.find(comment2.id).updated_at
+            comment2_updated_at, VinorTestComment.find(comment2.id).updated_at
         )
 
     def grammar(self):
@@ -736,14 +736,14 @@ class IntegrationTestCase(object):
         return "?"
 
 
-class VinormTestUser(Model):
+class VinorTestUser(Model):
 
     __table__ = "test_users"
     __guarded__ = []
 
     @belongs_to_many("test_friends", "user_id", "friend_id", with_pivot=["is_close"])
     def friends(self):
-        return VinormTestUser
+        return VinorTestUser
 
     @has_many("user_id")
     def posts(self):
@@ -751,38 +751,38 @@ class VinormTestUser(Model):
 
     @has_one("user_id")
     def post(self):
-        return VinormTestPost.select("id", "name", "name", "user_id").order_by(
+        return VinorTestPost.select("id", "name", "name", "user_id").order_by(
             "name", "desc"
         )
 
     @morph_many("imageable")
     def photos(self):
-        return VinormTestPhoto.order_by("name")
+        return VinorTestPhoto.order_by("name")
 
     @scope
     def older_than(self, query, **kwargs):
         query.where("updated_at", "<", pendulum.utcnow().subtract(**kwargs))
 
 
-class VinormTestPost(Model):
+class VinorTestPost(Model):
 
     __table__ = "test_posts"
     __guarded__ = []
 
     @belongs_to("user_id")
     def user(self):
-        return VinormTestUser
+        return VinorTestUser
 
     @has_many("post_id")
     def comments(self):
-        return VinormTestComment
+        return VinorTestComment
 
     @morph_many("imageable")
     def photos(self):
-        return VinormTestPhoto.order_by("name")
+        return VinorTestPhoto.order_by("name")
 
 
-class VinormTestComment(Model):
+class VinorTestComment(Model):
 
     __touches__ = ["parent"]
 
@@ -791,18 +791,18 @@ class VinormTestComment(Model):
 
     @belongs_to("post_id")
     def post(self):
-        return VinormTestPost
+        return VinorTestPost
 
     @belongs_to("parent_id")
     def parent(self):
-        return VinormTestComment
+        return VinorTestComment
 
     @has_many("parent_id")
     def children(self):
-        return VinormTestComment
+        return VinorTestComment
 
 
-class VinormTestPhoto(Model):
+class VinorTestPhoto(Model):
 
     __table__ = "test_photos"
     __guarded__ = []

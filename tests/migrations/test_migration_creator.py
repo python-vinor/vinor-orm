@@ -3,12 +3,12 @@
 import tempfile
 import os
 from flexmock import flexmock, flexmock_teardown
-from vinorm.migrations import MigrationCreator
-from vinorm.migrations.stubs import CREATE_STUB, UPDATE_STUB, BLANK_STUB
-from .. import VinormTestCase
+from vinor.migrations import MigrationCreator
+from vinor.migrations.stubs import CREATE_STUB, UPDATE_STUB, BLANK_STUB
+from .. import VinorTestCase
 
 
-class MigrationCreatorTestCase(VinormTestCase):
+class MigrationCreatorTestCase(VinorTestCase):
     def tearDown(self):
         flexmock_teardown()
 

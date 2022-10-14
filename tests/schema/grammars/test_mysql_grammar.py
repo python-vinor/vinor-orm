@@ -1,14 +1,14 @@
 # -*- coding: utf-8 -*-
 
 from flexmock import flexmock, flexmock_teardown
-from vinorm.connections import Connection
-from vinorm.schema.grammars import MySQLSchemaGrammar
-from vinorm.schema.blueprint import Blueprint
-from vinorm.connectors import MySQLConnector
-from ... import VinormTestCase
+from vinor.connections import Connection
+from vinor.schema.grammars import MySQLSchemaGrammar
+from vinor.schema.blueprint import Blueprint
+from vinor.connectors import MySQLConnector
+from ... import VinorTestCase
 
 
-class MySQLSchemaGrammarTestCase(VinormTestCase):
+class MySQLSchemaGrammarTestCase(VinorTestCase):
     def tearDown(self):
         flexmock_teardown()
 

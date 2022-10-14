@@ -16,7 +16,7 @@ addons:
   postgresql: '9.6'
 
 install:
-  - curl -fsS -o get-poetry.py https://raw.githubusercontent.com/sdispater/poetry/master/get-poetry.py
+  - curl -fsS -o get-poetry.py https://raw.githubusercontent.com/vinsast/poetry/master/get-poetry.py
   - python get-poetry.py --preview -y
   - source $HOME/.poetry/env
   - if [[ $MYSQL_PACKAGE == 'pymysql' ]]; then poetry install --extras mysql-python --extras pgsql; fi
@@ -25,8 +25,8 @@ install:
 script: pytest tests/
 
 before_script:
-  - psql -c 'create database vinorm_test;' -U postgres
-  - mysql -e 'create database vinorm_test;'
+  - psql -c 'create database vinor_test;' -U postgres
+  - mysql -e 'create database vinor_test;'
 
 jobs:
   include:

@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 
-from . import VinormTestCase
+from . import VinorTestCase
 from . import mock
 from .utils import MockConnection, MockManager
 
-from vinorm.database_manager import DatabaseManager
+from vinor.database_manager import DatabaseManager
 
 
-class ConnectionTestCase(VinormTestCase):
+class ConnectionTestCase(VinorTestCase):
     def test_connection_method_create_a_new_connection_if_needed(self):
         manager = self._get_manager()
         manager.table("users")

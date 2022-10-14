@@ -1,20 +1,20 @@
 # -*- coding: utf-8 -*-
 
 from flexmock import flexmock, flexmock_teardown
-from .. import VinormTestCase, mock
+from .. import VinorTestCase, mock
 from ..utils import MockModel, MockQueryBuilder, MockConnection, MockProcessor
-from vinorm.query.grammars.grammar import QueryGrammar
-from vinorm.query.builder import QueryBuilder
-from vinorm.orm.builder import Builder
-from vinorm.orm.model import Model
-from vinorm.orm import belongs_to, has_many, scope
-from vinorm.exceptions.orm import ModelNotFound
-from vinorm.orm.collection import Collection
-from vinorm.connections import Connection
-from vinorm.query.processors import QueryProcessor
+from vinor.query.grammars.grammar import QueryGrammar
+from vinor.query.builder import QueryBuilder
+from vinor.orm.builder import Builder
+from vinor.orm.model import Model
+from vinor.orm import belongs_to, has_many, scope
+from vinor.exceptions.orm import ModelNotFound
+from vinor.orm.collection import Collection
+from vinor.connections import Connection
+from vinor.query.processors import QueryProcessor
 
 
-class BuilderTestCase(VinormTestCase):
+class BuilderTestCase(VinorTestCase):
     def tearDown(self):
         flexmock_teardown()
 
@@ -442,7 +442,7 @@ class BuilderTestCase(VinormTestCase):
         return builder
 
 
-class VinormTestModel(Model):
+class VinorTestModel(Model):
     @classmethod
     def _boot_columns(cls):
         return []
@@ -452,24 +452,24 @@ class VinormTestModel(Model):
         return flexmock(Connection(None))
 
 
-class OrmBuilderTestModelFarRelatedStub(VinormTestModel):
+class OrmBuilderTestModelFarRelatedStub(VinorTestModel):
 
     pass
 
 
-class OrmBuilderTestModelScopeStub(VinormTestModel):
+class OrmBuilderTestModelScopeStub(VinorTestModel):
     @scope
     def approved(self, query):
         query.where("foo", "bar")
 
 
-class OrmBuilderTestModelCloseRelated(VinormTestModel):
+class OrmBuilderTestModelCloseRelated(VinorTestModel):
     @has_many
     def bar(self):
         return OrmBuilderTestModelFarRelatedStub
 
 
-class OrmBuilderTestModelParentStub(VinormTestModel):
+class OrmBuilderTestModelParentStub(VinorTestModel):
     @belongs_to
     def foo(self):
         return OrmBuilderTestModelCloseRelated

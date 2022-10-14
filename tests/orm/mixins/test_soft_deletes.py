@@ -3,16 +3,16 @@
 import datetime
 import pendulum
 from flexmock import flexmock, flexmock_teardown
-from vinorm import Model, SoftDeletes
-from vinorm.orm import Builder
-from vinorm.query import QueryBuilder
-from ... import VinormTestCase
+from vinor import Model, SoftDeletes
+from vinor.orm import Builder
+from vinor.query import QueryBuilder
+from ... import VinorTestCase
 
 
 t = pendulum.now()
 
 
-class SoftDeletesTestCase(VinormTestCase):
+class SoftDeletesTestCase(VinorTestCase):
     def tearDown(self):
         flexmock_teardown()
 

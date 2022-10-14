@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 
-from .. import VinormTestCase
+from .. import VinorTestCase
 
-from vinorm.connections.mysql_connection import MySQLConnection
+from vinor.connections.mysql_connection import MySQLConnection
 
 
-class MySQLConnectionTestCase(VinormTestCase):
+class MySQLConnectionTestCase(VinorTestCase):
     def test_marker_is_properly_set(self):
         connection = MySQLConnection(None, "database", "", {"use_qmark": True})
 

@@ -9,15 +9,15 @@ except ImportError:
 
 from flexmock import flexmock
 
-from .. import VinormTestCase
+from .. import VinorTestCase
 from .. import mock
 from ..orm.models import User
 
-from vinorm.query.builder import QueryBuilder
-from vinorm.connections.connection import Connection
+from vinor.query.builder import QueryBuilder
+from vinor.connections.connection import Connection
 
 
-class ConnectionTestCase(VinormTestCase):
+class ConnectionTestCase(VinorTestCase):
     def test_table_returns_query_builder(self):
         connection = Connection(None, "database")
         builder = connection.table("users")
@@ -75,7 +75,7 @@ class ConnectionTestCase(VinormTestCase):
         self.assertEqual("", connection.get_table_prefix())
 
 
-class ConnectionThreadLocalTest(VinormTestCase):
+class ConnectionThreadLocalTest(VinorTestCase):
 
     threads = 4
 

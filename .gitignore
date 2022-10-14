@@ -32,8 +32,8 @@ config.py
 /seeders
 /seeds
 development.db
-*vinorm.yml
-/docs/vinorm/
+*vinor.yml
+/docs/vinor/
 profile.html
 /benchmark
 benchmark.py

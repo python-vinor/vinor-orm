@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 
-from vinorm.pagination import Paginator
-from .. import VinormTestCase
+from vinor.pagination import Paginator
+from .. import VinorTestCase
 
 
-class PaginatorTestCase(VinormTestCase):
+class PaginatorTestCase(VinorTestCase):
     def test_returns_relevant_context(self):
         p = Paginator(["item3", "item4", "item5"], 2, 2)
 

@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 
-from .. import VinormTestCase
-from vinorm.orm.scopes import Scope
-from vinorm import Model
-from vinorm.connections import SQLiteConnection
-from vinorm.connectors import SQLiteConnector
+from .. import VinorTestCase
+from vinor.orm.scopes import Scope
+from vinor import Model
+from vinor.connections import SQLiteConnection
+from vinor.connectors import SQLiteConnector
 
 
-class ModelGlobalScopesTestCase(VinormTestCase):
+class ModelGlobalScopesTestCase(VinorTestCase):
     @classmethod
     def setUpClass(cls):
         Model.set_connection_resolver(DatabaseConnectionResolver())

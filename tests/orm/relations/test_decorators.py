@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-from ... import VinormTestCase
-from vinorm import Model as BaseModel
-from vinorm.orm import (
+from ... import VinorTestCase
+from vinor import Model as BaseModel
+from vinor.orm import (
     morph_to,
     has_one,
     has_many,
@@ -10,12 +10,12 @@ from vinorm.orm import (
     morph_many,
     belongs_to,
 )
-from vinorm.orm.model import ModelRegister
-from vinorm.connections import SQLiteConnection
-from vinorm.connectors.sqlite_connector import SQLiteConnector
+from vinor.orm.model import ModelRegister
+from vinor.connections import SQLiteConnection
+from vinor.connectors.sqlite_connector import SQLiteConnector
 
 
-class DecvinormsTestCase(VinormTestCase):
+class DecvinorsTestCase(VinorTestCase):
     @classmethod
     def setUpClass(cls):
         Model.set_connection_resolver(DatabaseIntegrationConnectionResolver())
@@ -58,13 +58,13 @@ class DecvinormsTestCase(VinormTestCase):
         self.create()
 
         # With eager loading
-        user = VinormTestUser.with_("friends", "posts", "post", "photos").find(1)
-        post = VinormTestPost.with_("user", "photos").find(1)
+        user = VinorTestUser.with_("friends", "posts", "post", "photos").find(1)
+        post = VinorTestPost.with_("user", "photos").find(1)
         self.assertEqual(1, len(user.friends))
         self.assertEqual(2, len(user.posts))
-        self.assertIsInstance(user.post, VinormTestPost)
+        self.assertIsInstance(user.post, VinorTestPost)
         self.assertEqual(3, len(user.photos))
-        self.assertIsInstance(post.user, VinormTestUser)
+        self.assertIsInstance(post.user, VinorTestUser)
         self.assertEqual(2, len(post.photos))
         self.assertEqual(
             'SELECT * FROM "test_users" INNER JOIN "test_friends" ON "test_users"."id" = "test_friends"."friend_id" '
@@ -93,13 +93,13 @@ class DecvinormsTestCase(VinormTestCase):
         )
 
         # Without eager loading
-        user = VinormTestUser.find(1)
-        post = VinormTestPost.find(1)
+        user = VinorTestUser.find(1)
+        post = VinorTestPost.find(1)
         self.assertEqual(1, len(user.friends))
         self.assertEqual(2, len(user.posts))
-        self.assertIsInstance(user.post, VinormTestPost)
+        self.assertIsInstance(user.post, VinorTestPost)
         self.assertEqual(3, len(user.photos))
-        self.assertIsInstance(post.user, VinormTestUser)
+        self.assertIsInstance(post.user, VinorTestUser)
         self.assertEqual(2, len(post.photos))
         self.assertEqual(
             'SELECT * FROM "test_users" INNER JOIN "test_friends" ON "test_users"."id" = "test_friends"."friend_id" '
@@ -133,8 +133,8 @@ class DecvinormsTestCase(VinormTestCase):
         )
 
     def create(self):
-        user = VinormTestUser.create(id=1, email="john@doe.com")
-        friend = VinormTestUser.create(id=2, email="jane@doe.com")
+        user = VinorTestUser.create(id=1, email="john@doe.com")
+        friend = VinorTestUser.create(id=2, email="jane@doe.com")
         user.friends().attach(friend)
 
         post1 = user.posts().create(name="First Post")
@@ -159,43 +159,43 @@ class Model(BaseModel):
     _register = ModelRegister()
 
 
-class VinormTestUser(Model):
+class VinorTestUser(Model):
 
     __table__ = "test_users"
     __guarded__ = []
 
     @belongs_to_many("test_friends", "user_id", "friend_id", with_pivot=["id"])
     def friends(self):
-        return VinormTestUser.order_by("friend_id")
+        return VinorTestUser.order_by("friend_id")
 
     @has_many("user_id")
     def posts(self):
-        return VinormTestPost.where_null("deleted_at")
+        return VinorTestPost.where_null("deleted_at")
 
     @has_one("user_id")
     def post(self):
-        return VinormTestPost.order_by("name", "desc")
+        return VinorTestPost.order_by("name", "desc")
 
     @morph_many("imageable")
     def photos(self):
-        return VinormTestPhoto.where_not_null("name")
+        return VinorTestPhoto.where_not_null("name")
 
 
-class VinormTestPost(Model):
+class VinorTestPost(Model):
 
     __table__ = "test_posts"
     __guarded__ = []
 
     @belongs_to("user_id")
     def user(self):
-        return VinormTestUser.order_by("id")
+        return VinorTestUser.order_by("id")
 
     @morph_many("imageable")
     def photos(self):
         return "test_photos"
 
 
-class VinormTestPhoto(Model):
+class VinorTestPhoto(Model):
 
     __table__ = "test_photos"
     __guarded__ = []

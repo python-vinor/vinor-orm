@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 
-from vinorm.pagination import LengthAwarePaginator
-from .. import VinormTestCase
+from vinor.pagination import LengthAwarePaginator
+from .. import VinorTestCase
 
 
-class LengthAwarePaginatorTestCase(VinormTestCase):
+class LengthAwarePaginatorTestCase(VinorTestCase):
     def test_returns_relevant_context(self):
         p = LengthAwarePaginator(["item3", "item4"], 4, 2, 2)
 

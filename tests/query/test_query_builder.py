@@ -2,25 +2,25 @@
 
 import re
 
-from .. import VinormTestCase
+from .. import VinorTestCase
 from .. import mock
 
 from ..utils import MockConnection, MockProcessor
 
-from vinorm.exceptions import ArgumentError
-from vinorm.query.grammars import (
+from vinor.exceptions import ArgumentError
+from vinor.query.grammars import (
     QueryGrammar,
     PostgresQueryGrammar,
     SQLiteQueryGrammar,
     MySQLQueryGrammar,
 )
-from vinorm.query.builder import QueryBuilder
-from vinorm.query.expression import QueryExpression
-from vinorm.query.join_clause import JoinClause
-from vinorm.support import Collection
+from vinor.query.builder import QueryBuilder
+from vinor.query.expression import QueryExpression
+from vinor.query.join_clause import JoinClause
+from vinor.support import Collection
 
 
-class QueryBuilderTestCase(VinormTestCase):
+class QueryBuilderTestCase(VinorTestCase):
     def test_basic_select(self):
         builder = self.get_builder()
         builder.select("*").from_("users")

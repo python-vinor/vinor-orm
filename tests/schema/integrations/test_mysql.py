@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 
 import os
-from ... import VinormTestCase
-from vinorm.connections import MySQLConnection
-from vinorm.connectors.mysql_connector import MySQLConnector
+from ... import VinorTestCase
+from vinor.connections import MySQLConnection
+from vinor.connectors.mysql_connector import MySQLConnector
 from . import IntegrationTestCase
 
 
-class SchemaBuilderMySQLIntegrationTestCase(IntegrationTestCase, VinormTestCase):
+class SchemaBuilderMySQLIntegrationTestCase(IntegrationTestCase, VinorTestCase):
     @classmethod
     def get_connection_resolver(cls):
         return DatabaseIntegrationConnectionResolver()
@@ -23,13 +23,13 @@ class DatabaseIntegrationConnectionResolver(object):
 
         ci = os.environ.get("CI", False)
         if ci:
-            database = "vinorm_test"
+            database = "vinor_test"
             user = "root"
             password = ""
         else:
-            database = "vinorm_test"
-            user = "vinorm"
-            password = "vinorm"
+            database = "vinor_test"
+            user = "vinor"
+            password = "vinor"
 
         self._connection = MySQLConnection(
             MySQLConnector().connect(

@@ -1,15 +1,15 @@
 # -*- coding: utf-8 -*-
 
 from flexmock import flexmock, flexmock_teardown
-from .. import VinormTestCase
-from vinorm.migrations import DatabaseMigrationRepository
-from vinorm import DatabaseManager
-from vinorm.query import QueryBuilder
-from vinorm.connections import Connection
-from vinorm.schema import SchemaBuilder
+from .. import VinorTestCase
+from vinor.migrations import DatabaseMigrationRepository
+from vinor import DatabaseManager
+from vinor.query import QueryBuilder
+from vinor.connections import Connection
+from vinor.schema import SchemaBuilder
 
 
-class DatabaseMigrationRepositoryTestCase(VinormTestCase):
+class DatabaseMigrationRepositoryTestCase(VinorTestCase):
     def tearDown(self):
         flexmock_teardown()
 
